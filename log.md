@@ -11,8 +11,8 @@ TODO:
 - [x] read https://aztec.network/blog/regeneration-a-manifesto-for-an-autonomous-future/
 - [x] read https://forum.aztec.network/t/how-to-do-contract-upgrades-feb-2024-edition/4583/3
 - [x] read https://forum.aztec.network/t/proposal-forcing-the-sequencer-to-actually-submit-data-to-l1/426/1
-- [ ] read https://github.com/AztecProtocol/aztec-packages/pull/4891#issuecomment-1986272222
-- [ ] Start plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
+- [x] read https://github.com/AztecProtocol/aztec-packages/pull/4891#issuecomment-1986272222
+- [x] Start plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
 
 BLOCKED:
 

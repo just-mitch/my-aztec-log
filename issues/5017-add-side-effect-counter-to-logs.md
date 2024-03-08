@@ -25,9 +25,7 @@ Note the fact that 2 `Fr` are required [may be dropped soon](https://github.com/
 
 # Solution Design
 
-Delve into the specifics of the design. Include diagrams, code snippets, API descriptions, and database schema changes as necessary. Highlight any significant changes to the existing architecture or interfaces.
-
-Discuss any alternative solutions.
+Currently thinking it might be easier to just split effects into `end` and `endNonRevertible` as they are processed in the private kernel. Then we don't need to "add side effects" to the logs.
 
 # Test Plan
 
