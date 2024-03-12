@@ -1,3 +1,17 @@
+# 2024-03-12
+
+TODO:
+
+- [ ] Review Palla's https://github.com/AztecProtocol/aztec-packages/pull/5141
+- [ ] Post plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
+
+# 2024-03-11
+
+TODO:
+
+- [x] Implement https://github.com/AztecProtocol/aztec-packages/pull/5038
+- [x] Continue plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
+
 # 2024-03-08
 
 TODO:
