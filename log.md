@@ -1,9 +1,19 @@
+# 2024-03-13
+
+- [ ] Post plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
+
 # 2024-03-12
 
 TODO:
 
-- [ ] Review Palla's https://github.com/AztecProtocol/aztec-packages/pull/5141
+- [x] Talk with Nico about how to plumb max_block_number through the circuits
+- [x] Review issue from Alex https://github.com/AztecProtocol/aztec-packages/issues/5150
+- [x] Review Alex's https://github.com/AztecProtocol/aztec-packages/pull/5129
 - [ ] Post plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
+
+DROPPED:
+
+- Review Palla's https://github.com/AztecProtocol/aztec-packages/pull/5141
 
 # 2024-03-11
 
