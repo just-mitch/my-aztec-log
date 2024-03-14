@@ -23,4 +23,4 @@ List contributors who may be interested in the issue and can review the plan.
 
 # Plan Approvals
 
-Please add a +1 or comment to express your approval or disapproval of the plan above.
+**_👋 Please add a +1 or comment to express your approval or disapproval of the plan above._**

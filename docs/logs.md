@@ -1,52 +1,4 @@
-# Introduction
-
-Presently, logs are not published in their chronological order.
-
-For example,
-
-```rust
-fn A() {
-  // emit log0
-  B();
-  // emit log2;
-}
-
-fn B() {
-  // emit log1;
-}
-```
-
-The logs are presently be emitted as on chain `[log0, log2, log1]`.
-
-The goal of this work is to instead emit the logs in their "chronological" order, `[log0, log1, log2]`.
-
-# Non-goals
-
-This issue is just focused on emitting logs in their "chronological" order and producing valid blocks.
-There is a follow on issue for [splitting into revertible and non-revertible logs](https://github.com/AztecProtocol/aztec-packages/issues/4712)
-
-# Solution criteria
-
-Requirements:
-
-- make all (un)encrypted logs available in the L2 block body appear in the same chronological order as they were emitted
-- don't leak any additional privacy
-- don't lose the current flexibility of an arbitrary number of logs
-- don't make additional trust assumptions
-- easily extensible to public execution
-- easily extensible to [splitting into revertible and non-revertible logs](https://github.com/AztecProtocol/aztec-packages/issues/4712)
-
-Nice to haves:
-
-- don't increase DA cost
-- don't blow up circuit sizes
-
-# Additional background
-
-- [Information on the original encoding scheme.](https://discourse.aztec.network/t/proposal-forcing-the-sequencer-to-actually-submit-data-to-l1/426)
-- [Known trust issue producing the log hash](https://github.com/AztecProtocol/aztec-packages/issues/1165)
-
-# Current state
+# State of logs 2024-03-14
 
 I'll focus on encrypted logs, and show how they are created and flow through the system.
 
@@ -302,11 +254,181 @@ return new Tx(
 );
 ```
 
-## Solo block builder
+## ProcessedTx
+
+When finished public execution, we convert the `Tx` into a `ProcessedTx`:
+
+```ts
+interface ProcessedTx {
+  encryptedLogs: TxL2Logs;
+  data: PublicKernelCircuitPublicInputs;
+}
+
+export class PublicKernelCircuitPublicInputs {
+  private combined: CombinedAccumulatedData | undefined = undefined;
+  constructor(
+    public endNonRevertibleData: PublicAccumulatedNonRevertibleData,
+    public end: PublicAccumulatedRevertibleData
+  ) {}
+
+  get combinedData() {
+    if (!this.combined) {
+      this.combined = CombinedAccumulatedData.recombine(
+        this.endNonRevertibleData,
+        this.end,
+        this.reverted
+      );
+    }
+    return this.combined;
+  }
+}
+
+//...
+function recombine(
+  nonRevertible: PublicAccumulatedNonRevertibleData,
+  revertible: PublicAccumulatedRevertibleData,
+  reverted: boolean
+): CombinedAccumulatedData {
+  return new CombinedAccumulatedData(
+    // presently, all logs are revertible
+    revertible.encryptedLogsHash,
+    revertible.encryptedLogPreimagesLength
+  );
+}
+```
+
+## Solo block builder - runCircuits
+
+`SoloBlockBuilder.buildL2Block` takes in an array of `ProcessedTx`.
+
+For each, we `buildBaseRollupInput(tx: ProcessedTx, globalVariables: GlobalVariables)`, which inserts leaves into trees, and converts our `ProcessedTx` into a
+
+```rs
+struct RollupKernelCircuitPublicInputs {
+    // other stuff
+    end: CombinedAccumulatedData,
+}
+```
 
 ## Base rollup circuit
 
-## L2 block encoding
+The `base_rollup_inputs.nr` produces a `BaseOrMergeRollupPublicInputs`, and the only thing on it we care about is `txs_effects_hash : [Field; NUM_FIELDS_PER_SHA256],`.
+
+This hash is computed in `noir-projects/noir-protocol-circuits/crates/rollup-lib/src/components.nr#compute_txs_effects_hash`. It concatenates all the note commitments, nullifiers, etc, _and_ the `encrypted_logs_hash` from the `ProcessedTx` and `sha256`'s the result.
+
+## Merge rollup circuit
+
+The `merge_rollup_inputs.nr` also produces a `BaseOrMergeRollupPublicInptus`, and computes its `tx_effects_hash` by concatenating the `tx_effects_hash` from two base rollups and `sha256`'ing the result.
+
+## Root rollup
+
+The `root_rollup_inputs.nr` produces a `RootRollupPublicInputs`:
+
+```rust
+struct RootRollupPublicInputs {
+    // other stuff
+    header: Header,
+}
+
+struct Header {
+    // other stuff
+    content_commitment: ContentCommitment
+}
+
+struct ContentCommitment {
+    // other stuff
+    txs_effects_hash: [Field; NUM_FIELDS_PER_SHA256], // concatenates the tx_effects_hash from the two previous merge rollups and hashes the result
+}
+```
+
+## Solo block builder - buildL2Block
+
+After the call from `runCircuits`, we have our `RootRollupPublicInputs` and array of `ProcessedTx`. We convert each `ProcessedTx` into a `TxEffect`:
+
+```ts
+export function toTxEffect(tx: ProcessedTx): TxEffect {
+  return new TxEffect(
+    // ...
+    tx.encryptedLogs || new TxL2Logs([]),
+    tx.unencryptedLogs || new TxL2Logs([])
+  );
+}
+```
+
+Which we use to produce a `Body`:
+
+```ts
+export class Body {
+  constructor(
+    public l1ToL2Messages: Tuple<
+      Fr,
+      typeof NUMBER_OF_L1_L2_MESSAGES_PER_ROLLUP
+    >,
+    public txEffects: TxEffect[]
+  ) {}
+}
+```
+
+The `Body` and the `RootRollupPublicInputs` is then used to produce a `L2Block`:
+
+```ts
+const l2Block = L2Block.fromFields({
+  archive: circuitsOutput.archive,
+  header: circuitsOutput.header, // holds the content commitment we computed in the root rollup
+  body: blockBody, // holds the raw logs
+});
+```
+
+We then sanity check the hashes:
+
+```ts
+if (
+  !l2Block.body
+    .getTxsEffectsHash()
+    .equals(circuitsOutput.header.contentCommitment.txsEffectsHash)
+) {
+  throw new Error(...);
+}
+```
+
+The `getTxsEffectsHash` mirrors the merkle tree construction in the circuits. Its leaves are comprised of `this.txEffects.map(txEffect => txEffect.hash());`.
+
+In the course of computing `txEffect.hash()`, we call `txEffect.encryptedLogs.hash()`, which mirrors the construction of the `encrypted_logs_hash` in the private kernel, i.e.
+
+```ts
+const logsHashes: [Buffer, Buffer] = [Buffer.alloc(32), Buffer.alloc(32)];
+let kernelPublicInputsLogsHash = Buffer.alloc(32);
+
+for (const logsFromSingleFunctionCall of this.functionLogs) {
+  logsHashes[0] = kernelPublicInputsLogsHash;
+  logsHashes[1] = logsFromSingleFunctionCall.hash(); // privateCircuitPublicInputsLogsHash
+
+  // Hash logs hash from the public inputs of previous kernel iteration and logs hash from private circuit public inputs
+  kernelPublicInputsLogsHash = sha256(Buffer.concat(logsHashes));
+}
+
+return kernelPublicInputsLogsHash;
+```
+
+And `logsFromSingleFunctionCall.hash()` is
+
+```ts
+// Remove first 4 bytes that are occupied by length which is not part of the preimage in contracts and L2Blocks
+const preimage = this.toBuffer().subarray(4);
+return sha256(preimage);
+```
+
+## L1 body encoding and publishing
+
+in `L1Publisher#processL2Block`, we
+
+```ts
+const encodedBody = block.body.toBuffer();
+// ...
+const txHash = await this.sendPublishTx(encodedBody);
+```
+
+Which ultimately writes the encoded body to our AvailabilityOracle contract on L1.
 
 A `TxL2Logs` is presently encoded/serialized into the L2 block body as follows:
 
@@ -316,37 +438,49 @@ tx_logs_len || f1_logs_len || f1_log1_len || f1_log1 || f1_log2_len || f1_log2 |
 
 where `tx_logs_len` is the total length of all logs emitted in the transaction, `f1_logs_len` is the total length of all logs emitted in the first function, and so on.
 
-## L1 verification
+The availability oracle calls `bytes32 txsEffectsHash = TxsDecoder.decode(_body);`.
 
-# Proposed solution
+This walks through the same operations as the `txEffect.hash()` during:
 
-We cannot encode the logs in the L2 block body grouped by function, because as we've seen, they could overlap. So we need to encode them in the order they were emitted.
+```solidity
+function publish(bytes calldata _body) external override(IAvailabilityOracle) returns (bytes32) {
+  bytes32 txsEffectsHash = TxsDecoder.decode(_body);
+  isAvailable[txsEffectsHash] = true;
 
-We will present the L2 block encoding, and work backwards down the stack to arrive at how such an encoding can be produced.
+  emit TxsPublished(txsEffectsHash);
 
-## L2 block encoding
-
-We will simplify the encoding to just:
-
+  return txsEffectsHash;
+}
 ```
-tx_logs_len || log1_len || log1 || log2_len || log2 || ...
+
+## L1 processing
+
+Once the body is published, we actually process it, by calling
+
+```ts
+const processTxArgs = {
+  header: block.header.toBuffer(),
+  archive: block.archive.root.toBuffer(),
+  body: encodedBody,
+  proof: Buffer.alloc(0),
+};
+
+// ...
+const txHash = await this.sendProcessTx(processTxArgs);
 ```
 
-where `log1_len` is the length of `log1`, and `log1` is the first chronologically emitted log, and so on.
+This calls out to our Rollup contract and calls `process`.
 
-# Test Plan
+This extracts the content commitment from the header, `header.contentCommitment.txsEffectsHash = bytes32(_header[0x0044:0x0064]);` which, if you recall, is the `txsEffectsHash` we computed in the root rollup.
 
-Outline the unit tests that will be written for this feature, including the logic they cover and any mock objects used.
-Describe the e2e tests that will be added.
+It then ensures that the `txsEffectsHash` that was committed to is what was published earlier:
 
-# Documentation Plan
+```solidity
+if (!AVAILABILITY_ORACLE.isAvailable(header.contentCommitment.txsEffectsHash)) {
+  revert Errors.Rollup__UnavailableTxs(header.contentCommitment.txsEffectsHash);
+}
+```
 
-Identify changes or additions to the user documentation, or yellow-paper.
+A few more checks later and it calls `emit L2BlockProcessed(header.globalVariables.blockNumber);`.
 
-# Especially Relevant Parties
-
-List contributors who may be interested in the issue and can review the plan.
-
-# Plan Approvals
-
-Please add a +1 or comment to express your approval or disapproval of the plan above.
+Et voila.

@@ -1,6 +1,33 @@
+# 2024-03-15
+
+- [ ] share https://hackmd.io/8Nj4_P3aSMiHn871JOIuOQ
+- [ ] review https://github.com/AztecProtocol/aztec-packages/pull/5201
+
+# 2024-03-14
+
+- [x] digest yp docs on logs and ordering in circuits
+- [x] meet with Jan, Leila, and Miranda about attacking a larger log refactor
+- [x] update log issues in github
+- [x] review https://github.com/AztecProtocol/aztec-packages/issues/5209
+- [x] post design for https://github.com/AztecProtocol/aztec-packages/pull/5226
+
 # 2024-03-13
 
-- [ ] Post plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
+TODO:
+
+- [x] Re-review Alex's https://github.com/AztecProtocol/aztec-packages/pull/5129
+- [x] Re-review Alex's https://github.com/AztecProtocol/aztec-packages/pull/4891
+- [x] Send initial thoughts on ordered logs to Jan and Leila
+
+DROPPED:
+
+- Post plan for https://github.com/AztecProtocol/aztec-packages/pull/5017
+  Realizing this is way to big to be a single PR plan. Need a more holistic approach.
+
+STANDUP:
+
+Discussed possible issue with not having up to date trees while simulating in public.
+Voiced opinion that integrating the proving system is more important than native merkle trees.
 
 # 2024-03-12
 
