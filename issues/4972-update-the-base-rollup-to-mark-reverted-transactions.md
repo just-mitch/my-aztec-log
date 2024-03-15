@@ -32,10 +32,12 @@ Note that the `reverted` flag comes from the `PublicKernelCircuitPublicInputs`. 
 
 The `reverted` flag will come first in the encoded `TxEffect`.
 
+Unfortunately, we cannot be so granular as bits, so we need to add a new byte to the encoding.
+
 That is we will publish:
 
 ```
-|| 1 bit for reverted || ... Existing PublishedTxEffect ... ||
+|| 1 byte for reverted || ... Existing PublishedTxEffect ... ||
 ```
 
 ## L1 Tx Decoder
