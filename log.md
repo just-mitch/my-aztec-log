@@ -1,7 +1,8 @@
 # 2024-03-15
 
-- [ ] share https://hackmd.io/8Nj4_P3aSMiHn871JOIuOQ
-- [ ] review https://github.com/AztecProtocol/aztec-packages/pull/5201
+- [x] share https://hackmd.io/8Nj4_P3aSMiHn871JOIuOQ
+- [x] review https://github.com/AztecProtocol/aztec-packages/pull/5236
+- [ ] implement https://github.com/AztecProtocol/aztec-packages/pull/5226
 
 # 2024-03-14
 
