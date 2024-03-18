@@ -1,8 +1,15 @@
+# 2024-03-18
+
+- [ ] get 4972 to a committable state
+- [ ] review phil's prover work
+- [ ] review alex's work on sequencer checks
+- [ ] continue 4972. get blocks building properly.
+
 # 2024-03-15
 
 - [x] share https://hackmd.io/8Nj4_P3aSMiHn871JOIuOQ
 - [x] review https://github.com/AztecProtocol/aztec-packages/pull/5236
-- [ ] implement https://github.com/AztecProtocol/aztec-packages/pull/5226
+- [ ] implement https://github.com/AztecProtocol/aztec-packages/pull/5226 on '4972-update-the-base-rollup-to-mark-reverted-transactions'
 
 # 2024-03-14
 
