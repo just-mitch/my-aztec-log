@@ -1,9 +1,24 @@
 # 2024-03-18
 
-- [ ] get 4972 to a committable state
-- [ ] review phil's prover work
-- [ ] review alex's work on sequencer checks
-- [ ] continue 4972. get blocks building properly.
+## Focus
+
+- [x] get 4972 passing existing tests
+- [x] get 4972 passing new tests
+
+## Reviews
+
+- review phil's prover work
+  - [x] https://github.com/AztecProtocol/aztec-packages/pull/5259
+- review alex's work on sequencer checks
+  - [x] https://github.com/AztecProtocol/aztec-packages/pull/5265
+  - [x] https://github.com/AztecProtocol/aztec-packages/pull/5266
+  - [x] https://github.com/AztecProtocol/aztec-packages/pull/5267
+
+## Phil 1-1
+
+- I volunteered to focus on security, Phil is going to get that ball rolling
+- Likely going to use calldata for DA for ITN
+- Likely need native merkle tree ops- concern with using rust because our hashes are written in c++ so either the FFI needs to be good or we need to rewrite the hashes in rust
 
 # 2024-03-15
 
