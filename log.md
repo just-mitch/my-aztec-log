@@ -1,3 +1,19 @@
+# 2024-03-19
+
+## Focus
+
+- [x] update design comment on 'mark-reverted-transactions'
+- [ ] merge 'mark-reverted-transactions' - couldn't because of bug on master
+- [x] add design for more efficient encoding of revertCode
+- [ ] start design for da gas profiler
+
+## Reviews
+
+- Alex
+  - [x] [whitelisting FPC work](https://github.com/AztecProtocol/aztec-packages/pull/5310)
+  - [x] [move entrypoints back into accounts.js so we can reuse their code](https://github.com/AztecProtocol/aztec-packages/pull/5312)
+  - [x] [add signerless entrypoint contract, update signerless wallet, deploy gas token with it](https://github.com/AztecProtocol/aztec-packages/pull/5313)
+
 # 2024-03-18
 
 ## Focus

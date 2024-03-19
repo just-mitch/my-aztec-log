@@ -1,43 +1,56 @@
 # Introduction
 
-Presently, if a transaction is reverted, the base rollup does not mark it as reverted: it merely only has its revertible side effects dropped. This issue will update the base rollup to mark reverted transactions.
+Presently, if a transaction is reverted, the base rollup does not mark it as reverted: it merely has its revertible side effects dropped. This issue will update the base rollup to mark reverted transactions.
 
 # Solution Design
 
-## Augment `TxEffect`
+## New `RevertCode` in `TxEffect`
 
-Add to `TxEffect`:
+Create a new class in `circuits.js` to hold a `RevertCode`. It will be a safe wrapper around an `Fr` that will be used to store the revert code of a transaction.
 
-- `reverted`: a `bool`
+`0` will indicate success, and any other value will indicate failure. Presently, only `1` is used to indicate general failure, but we'll leave the door open for future expansion.
+
+`TxEffect` will be updated to include a `RevertCode`.
 
 ### Ethereum `status`
 
-Ethereum stores their `status` in a `uint64`, but only currently use `0` to indicate failure and `1` for success. We don't need to repeat the same mistake. [More info](https://github.com/ethereum/EIPs/issues/98) (Thanks @spalladino !)
+Ethereum stores their `status` in a `uint64`, but only currently use `0` to indicate failure and `1` for success. [More info](https://github.com/ethereum/EIPs/issues/98) (Thanks @spalladino !)
 
-### Future additions
+### Size considerations
 
-We'll eventually want to add `gasUsed` and `gasPrice` to `TxEffect`. We'll add them to `RollupKernelCircuitPublicInputs` when we do.
+We'll eventually want to add `gasUsed` and `gasPrice` to `TxEffect`. Using a full field is wasteful, but using a smaller size will make the encoding and hashing more complex (see below). We'll implement with a full field and have a stacked PR to optimize the size.
 
 ## Kernel Constraints
 
-The `reverted` flag will become part of the content commitment for a transaction.
+The `RevertCode` will become part of the content commitment for a transaction.
 
-We can just add the `reverted` flag to `RollupKernelCircuitPublicInputs`.
+The content commitment is computed by the base rollup in `compute_tx_effects_hash`, which:
 
-### No public component
+- accepts a `CombinedAccumulatedData`
+- operates over `Field`s
 
-Note that the `reverted` flag comes from the `PublicKernelCircuitPublicInputs`. If we're coming straight from private, we'll manually set the flag to false now, since in the future we'll probably need a specialized circuit to handle the case where there is no public component. @LeilaWang ?
+We will therefore update the `CombinedAccumulatedData` to include the `RevertCode`.
+
+A fallout from that is we will move the current `reverted` flag from `PublicKernelCircuitPublicInputs` to be part of:
+
+- `PrivateAccumulatedNonRevertibleData`
+- `PublicAccumulatedNonRevertibleData`
+
+This is because we:
+
+1. build up a `CombinedAccumulatedData` during private execution
+2. split them into `PrivateAccumulatedNonRevertibleData` and `PrivateAccumulatedRevertibleData` in the private kernel tail
+3. convert those `PrivateAccumulated...` into `PublicAccumulated...` during public kernel execution as needed
+4. recombine them back into `CombinedAccumulatedData` before feeding back into base rollup
 
 ## Encoding
 
-The `reverted` flag will come first in the encoded `TxEffect`.
-
-Unfortunately, we cannot be so granular as bits, so we need to add a new byte to the encoding.
+The `RevertCode` will come first in the encoded `TxEffect`.
 
 That is we will publish:
 
 ```
-|| 1 byte for reverted || ... Existing PublishedTxEffect ... ||
+|| 32 bytes for RevertCode || ... Existing PublishedTxEffect ... ||
 ```
 
 ## L1 Tx Decoder
@@ -62,7 +75,7 @@ We need to update `getSettledTxReceipt` to inspect the `TxEffect` and set the `s
 
 # Documentation Plan
 
-Will start a page in the "Data publication and availability" section of the yellow paper describing the format of the block submitted and the `reverted` flag.
+Will start a page in the "Data publication and availability" section of the yellow paper describing the format of the block submitted.
 
 # Especially Relevant Parties
 
