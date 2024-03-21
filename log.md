@@ -1,3 +1,21 @@
+# 2024-03-22
+
+## Charlie Donut
+
+- Concerns about quantum?
+
+# 2024-03-20
+
+## Focus
+
+- skim strategy docs
+  - [x] noir commercial goals
+  - [x] growth goals
+  - [x] developer funnel
+  - [x] execution environment engineering
+- [x] merge 'mark-reverted-transactions'
+- [ ] post design for DA gas profiler
+
 # 2024-03-19
 
 ## Focus
@@ -5,7 +23,7 @@
 - [x] update design comment on 'mark-reverted-transactions'
 - [ ] merge 'mark-reverted-transactions' - couldn't because of bug on master
 - [x] add design for more efficient encoding of revertCode
-- [ ] start design for da gas profiler
+- [x] start design for da gas profiler
 
 ## Reviews
 
