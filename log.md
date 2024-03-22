@@ -2,12 +2,14 @@
 
 ## Charlie Donut
 
-- Security position/work?
-- Concerns about quantum?
+- [x] Security position/work?
+  - Will pass on to Kesha
+- [x] Concerns about quantum?
+  - Expects evolutions in our crypto. Should have enough lead time
 
 ## Focus
 
-- [ ] post design for gas profiler
+- [x] post design for gas profiler
 
 # 2024-03-21
 
