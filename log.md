@@ -2,7 +2,27 @@
 
 ## Charlie Donut
 
+- Security position/work?
 - Concerns about quantum?
+
+## Focus
+
+- [ ] post design for gas profiler
+
+# 2024-03-21
+
+## Reviews
+
+- [x] Phil's dynamic prover
+- [~] A bunch from Palla
+  - did the base PR.
+
+## Focus
+
+- [ ] post design for gas profiler
+  - reviews took a long time to digest.
+  - got a rough diagram sketched.
+- [ ] read material on parity circuits
 
 # 2024-03-20
 
@@ -14,7 +34,7 @@
   - [x] developer funnel
   - [x] execution environment engineering
 - [x] merge 'mark-reverted-transactions'
-- [ ] post design for DA gas profiler
+- [ ] post design for DA gas profiler - made great exploratory progress
 
 # 2024-03-19
 
