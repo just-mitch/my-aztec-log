@@ -1,3 +1,12 @@
+# 2024-03-24
+
+## Accomplishments
+
+- Implemented revert code
+- Design for DA gas profiler
+- Thorough reviews of proving single private function inclusion and dynamic proving
+- Volunteered for security work
+
 # 2024-03-22
 
 ## Charlie Donut
