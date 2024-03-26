@@ -1,3 +1,34 @@
+# 2024-03-25
+
+## Focus
+- [ ] Clear review stack
+- [ ] continue implementation of DA metering
+
+## Extra
+- [ ] finish types chapter in rust for rustaceans
+- [ ] define interface for rust merkle trees
+
+
+# 2024-03-24
+
+## Focus
+
+- [ ] Attempt to clean up intellisense. 
+    - Failure
+- [x] Meet with a16z research on fees
+    - great conversation, especially with Pranav afterward. key takeaways
+    - nailing down l1 verification cost is the focus. 
+    - can use shapley to get to 1 variable for l1 verification costs, but need a way to either
+        - constrain sequencer to commit to a "cost" ahead of accepting bids, or
+        - have a proxy pay out the refunds
+    - if we convert to blobs for DA, we can amortize that as well
+    - until we have serious contention for l2 blockspace, we can just have a fixed multiple for coming up with an l2 price, based on metering.
+- [x] continue implementation of DA metering
+
+## Extra
+
+- [ ] started survey paper on [commitment schemes and zk protocols](https://homepages.cwi.nl/~schaffne/courses/crypto/2014/papers/ComZK08.pdf?utm_source=pocket_saves)
+
 # 2024-03-24
 
 ## Accomplishments
