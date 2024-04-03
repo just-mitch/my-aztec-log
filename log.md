@@ -1,17 +1,30 @@
 # On Tap
 
-- [ ] writeup on structs that need to change in the kernel w.r.t. gas accounting
+- [ ] spike homomorphic implementation of partial notes
+
+# 2024-04-03
+
+## Focus
+
+- [ ] fix merge conflicts in PR
+  - started, stopped after big merge from Leila
+- [x] read through slack
+- [x] start writeup on structs that need to change in the kernel w.r.t. gas accounting
+
+## Extra
+
+- [ ] continue survey paper on [commitment schemes and zk protocols](https://homepages.cwi.nl/~schaffne/courses/crypto/2014/papers/ComZK08.pdf?utm_source=pocket_saves)
 
 # 2024-03-28
 
 ## Focus
 
-- [ ] continue implementation of private DA metering
+- [x] post PR of private DA metering
 
 ## Extra
 
-- [ ] finish types chapter in rust for rustaceans
-- [ ] define interface for rust merkle trees
+- [x] finish types chapter in rust for rustaceans
+- [x] review existing interface for aztec merkle tree:s
 
 # 2024-03-27
 
