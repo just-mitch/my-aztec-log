@@ -13,7 +13,7 @@
 
 ## Extra
 
-- [ ] continue survey paper on [commitment schemes and zk protocols](https://homepages.cwi.nl/~schaffne/courses/crypto/2014/papers/ComZK08.pdf?utm_source=pocket_saves)
+- [x] continue survey paper on [commitment schemes and zk protocols](https://homepages.cwi.nl/~schaffne/courses/crypto/2014/papers/ComZK08.pdf?utm_source=pocket_saves)
 
 # 2024-03-28
 
