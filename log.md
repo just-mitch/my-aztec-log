@@ -1,6 +1,23 @@
 # On Tap
 
-- [ ] spike homomorphic implementation of partial notes
+# 2024-04-05
+
+## Focus
+
+- [x] make updates to gas accounting writeup
+- [x] schedule review of gas accounting writeup
+- [ ] read mikes thread on note discovery
+- [ ] start spike homomorphic implementation of partial notes
+
+# 2024-04-04
+
+## Focus
+
+- [x] share writeup on gas accounting
+
+## Extra
+
+- [ ] Finish interfaces chapter in rust for rustaceans
 
 # 2024-04-03
 
