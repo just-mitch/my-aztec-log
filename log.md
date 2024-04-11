@@ -1,13 +1,40 @@
 # On Tap
 
+- [ ] look into l1-l2 messaging
+- [ ] read mikes thread on note discovery
+
+# 2024-04-11
+
+- [ ] finish review of pw/generate-keys
+- [ ] review palla/gas-in-circuits
+- [ ] continue homomorphic spike
+
+# 2024-04-10
+
+## focus
+
+- [ ] hold design review, update docs based on feedback
+- [x] continue homomorphic spike
+
+# 2024-04-09
+
+Vacation!
+
+# 2024-04-08
+
+## Focus
+
+- [x] start spike homomorphic implementation of partial notes
+- [ ] update design doc based on Phil's comments
+
 # 2024-04-05
 
 ## Focus
 
 - [x] make updates to gas accounting writeup
 - [x] schedule review of gas accounting writeup
-- [ ] read mikes thread on note discovery
-- [ ] start spike homomorphic implementation of partial notes
+- [on-tap] read mikes thread on note discovery
+- [x] start spike homomorphic implementation of partial notes
 
 # 2024-04-04
 
