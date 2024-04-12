@@ -2,18 +2,25 @@
 
 - [ ] look into l1-l2 messaging
 - [ ] read mikes thread on note discovery
+- [ ] update docs based on feedback
+
+# 2024-04-12
+
+- [ ] continue homomorphic spike
 
 # 2024-04-11
 
-- [ ] finish review of pw/generate-keys
-- [ ] review palla/gas-in-circuits
-- [ ] continue homomorphic spike
+- [x] finish review of pw/generate-keys
+- [x] review palla/gas-in-circuits
+- [x] reviewed palla's forum post
+- [x] continue homomorphic spike
 
 # 2024-04-10
 
 ## focus
 
-- [ ] hold design review, update docs based on feedback
+- [x] hold design review
+- [ ] update docs based on feedback
 - [x] continue homomorphic spike
 
 # 2024-04-09
