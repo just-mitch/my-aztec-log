@@ -1,12 +1,13 @@
 # On Tap
 
+- [ ] noir PR
 - [ ] look into l1-l2 messaging
 - [ ] read mikes thread on note discovery
 - [ ] update docs based on feedback
 
 # 2024-04-12
 
-- [ ] continue homomorphic spike
+- [x] continue homomorphic spike
 
 # 2024-04-11
 
