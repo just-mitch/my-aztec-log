@@ -1,9 +1,22 @@
 # On Tap
 
-- [ ] noir PR
 - [ ] look into l1-l2 messaging
 - [ ] read mikes thread on note discovery
 - [ ] update docs based on feedback
+
+# 2024-04-16
+
+- [ ] stack DA metering changes on palla's branch
+- [ ] continue research on cross chain
+
+
+# 2024-04-15
+
+- [x] posted proposed changes to support private refunds
+- [x] update noir PR
+- [x] started looking into cross chain messaging costs
+- [x] start work to pull changes to DA metering
+- [x] review palla avm changes
 
 # 2024-04-12
 
